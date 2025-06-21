@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.font-shareTechMono {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.glow-text {
+  text-shadow:
+    0 0 5px #00ff00,
+    0 0 10px #00ff00,
+    0 0 20px #00ff00,
+    0 0 40px #00ff00;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+.animate-flicker {
+  animation: flicker 1.5s infinite;
+}
+
+.shadow-glow {
+  box-shadow:
+    0 0 8px #00ff00aa,
+    inset 0 0 12px #00ff00cc;
+}
+
+@keyframes loadingBarMove {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.loading-bar-fill {
+  width: 40%; /* barın genişliği */
+  animation: loadingBarMove 1.8s linear infinite;
+  background: linear-gradient(
+    90deg,
+    rgba(16, 185, 129, 0.3),
+    rgba(16, 185, 129, 1),
+    rgba(16, 185, 129, 0.3)
+  );
+  box-shadow: 0 0 10px #10b981, 0 0 20px #10b981;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease forwards;
+}
