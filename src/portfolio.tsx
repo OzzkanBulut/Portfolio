@@ -3,7 +3,9 @@ import {
   Mail, Phone, MapPin, Github, Linkedin, Twitter, ExternalLink, Download,
   Code, Smartphone, Globe, Palette, Server, User, Briefcase, MessageCircle, Send,
   Box,
-  Instagram
+  Instagram,
+  X,
+  Menu
 } from 'lucide-react';
 import emailjs from 'emailjs-com';
 
@@ -14,6 +16,8 @@ const MatrixPortfolio: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [sectionTransition, setSectionTransition] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   
   const [formData, setFormData] = useState({
     name: '',
@@ -45,6 +49,7 @@ const MatrixPortfolio: React.FC = () => {
   setTimeout(() => {
     setActiveSection(newSection);
     setSectionTransition(false);
+    setIsSidebarOpen(false); //
   }, 300);
 };
 
@@ -137,7 +142,7 @@ const education = [
   {
     title: 'Drag & Drop Form Builder',
     description: 'Dynamic form creator built with Angular and TypeScript, supporting custom fields and export.',
-    image: 'form.png',
+    image: 'form.svg',
     tech: ['Angular', 'TypeScript', 'HTML', 'CSS'],
     link: 'https://github.com/MergenTech-Angular-Form-Tool/FrontEnd'
   }
@@ -206,9 +211,13 @@ const handleFormSubmit = (e?: React.FormEvent) => {
 };
 
   const Sidebar = () => (
-  <div className={`fixed left-0 top-0 h-screen w-72 bg-gradient-to-b from-gray-900 to-black border-r border-green-400/20 p-6 flex flex-col justify-between text-sm transition-all duration-1000 ease-out ${
-    showContent ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
-  }`}>
+  <div
+      className={`fixed left-0 top-0 h-screen w-72 bg-gradient-to-b from-gray-900 to-black border-r border-green-400/20 p-6 flex flex-col justify-between text-sm transition-transform duration-300 ease-out
+        md:translate-x-0 md:opacity-100
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}
+      style={{ zIndex: 100 }}
+    >
 
     {/* Üst Kısım: Profil + Nav */}
     <div>
@@ -348,42 +357,43 @@ const handleFormSubmit = (e?: React.FormEvent) => {
     </div>
 
     <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-8 border border-green-400/20">
-      <h3 className="text-2xl font-bold text-white mb-6">SKILLS & TECHNOLOGIES</h3>
-      <div className="grid grid-cols-5 gap-6">
-        {techSkills.map((tech, i) => (
-          <div key={i} className="flex flex-col items-center group">
-            <div className="w-16 h-16 bg-gray-800 rounded-xl flex items-center justify-center mb-3 border border-gray-700 group-hover:border-green-400/50 group-hover:bg-green-400/10 transition-all duration-300">
-              <img 
-                src={tech.logo} 
-                alt={tech.name}
-                className="w-10 h-10 object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  target.nextElementSibling?.setAttribute('style', 'display: flex');
-                }}
-              />
-              <div className="w-10 h-10 bg-green-400/20 rounded-lg items-center justify-center text-green-400 font-bold text-xs hidden">
-                {tech.name.slice(0, 2).toUpperCase()}
-              </div>
-            </div>
-            <span className="text-gray-300 text-sm text-center group-hover:text-green-400 transition-colors">
-              {tech.name}
-            </span>
+  <h3 className="text-2xl font-bold text-white mb-6">SKILLS & TECHNOLOGIES</h3>
+  <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 gap-6">
+    {techSkills.map((tech, i) => (
+      <div key={i} className="flex flex-col items-center group">
+        <div className="w-16 h-16 bg-gray-800 rounded-xl flex items-center justify-center mb-3 border border-gray-700 group-hover:border-green-400/50 group-hover:bg-green-400/10 transition-all duration-300">
+          <img 
+            src={tech.logo} 
+            alt={tech.name}
+            className="w-10 h-10 object-contain"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.nextElementSibling?.setAttribute('style', 'display: flex');
+            }}
+          />
+          <div className="w-10 h-10 bg-green-400/20 rounded-lg items-center justify-center text-green-400 font-bold text-xs hidden">
+            {tech.name.slice(0, 2).toUpperCase()}
           </div>
-        ))}
+        </div>
+        <span className="text-gray-300 text-sm text-center group-hover:text-green-400 transition-colors">
+          {tech.name}
+        </span>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
 
-     <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-8 border border-green-400/20">
+
+    <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-8 border border-green-400/20">
       <h3 className="text-2xl font-bold text-white mb-6">Education</h3>
       <div className="space-y-6">
         {education.map((edu, i) => (
           <div key={i} className="border-l-2 border-green-400/50 pl-6">
             <h4 className="text-xl font-semibold text-white">{edu.school}</h4>
             <p className="text-green-400">{edu.degree}</p>
-            <p className="text-gray-400 text-sm mb-2">{edu.period}</p>
-            <p className="text-gray-300">{edu.gpa}</p>
+            <p className="text-gray-400 text-sm">{edu.gpa}</p>
+            <p className="text-gray-400 text-sm">{edu.period}</p>
           </div>
         ))}
       </div>
@@ -391,178 +401,200 @@ const handleFormSubmit = (e?: React.FormEvent) => {
   </div>
 );
 
-  const PortfolioSection = () => (
-    <div className="space-y-8">
-      <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-8 border border-green-400/20">
-        <h2 className="text-3xl font-bold text-white mb-6">Portfolio</h2>
-        <p className="text-gray-300">Here are some of my recent projects that showcase my skills and expertise.</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project, i) => (
-          <div key={i} className="bg-gradient-to-r from-gray-900 to-black rounded-xl border border-green-400/20 overflow-hidden hover:border-green-400/50 transition-all duration-300 hover:transform hover:scale-105">
-            <img 
-              src={project.image} 
-              alt={project.title}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
-              <p className="text-gray-400 mb-4">{project.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.tech.map((tech, j) => (
-                  <span key={j} className="px-3 py-1 bg-green-400/20 text-green-400 text-sm rounded-full">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-4">
+const PortfolioSection = () => (
+  <div className="space-y-8">
+    <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-8 border border-green-400/20">
+      <h2 className="text-3xl font-bold text-white mb-6">Portfolio</h2>
+      <p className="text-gray-300">Here are some of my recent projects that showcase my skills and expertise.</p>
+    </div>
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {projects.map((project, i) => (
+        <div key={i} className="bg-gradient-to-r from-gray-900 to-black rounded-xl border border-green-400/20 overflow-hidden hover:border-green-400/50 transition-all duration-300 hover:transform hover:scale-105">
+          <img 
+            src={project.image} 
+            alt={project.title}
+            className="w-full h-48 object-cover"
+          />
+          <div className="p-6">
+            <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
+            <p className="text-gray-400 mb-4">{project.description}</p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {project.tech.map((tech, j) => (
+                <span key={j} className="px-3 py-1 bg-green-400/20 text-green-400 text-sm rounded-full">
+                  {tech}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <a 
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors"
+              >
+                <span>View Project</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+
+              {project.title.startsWith('Bazaar') && (
                 <a 
-                  href={project.link}
+                  href="https://bazaar-front.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors"
                 >
-                  <span>View Project</span>
-                  <ExternalLink className="w-4 h-4" />
+                  <span>Go to Live Site</span>
+                  <Globe className="w-4 h-4" />
                 </a>
-
-                {project.title.startsWith('Bazaar') && (
-                  <a 
-                    href="https://bazaar-front.vercel.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors"
-                  >
-                    <span>Go to Live Site</span>
-                    <Globe className="w-4 h-4" />
-                  </a>
-                )}
-              </div>
+              )}
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const ContactSection = () => {
-  const [localFormData, setLocalFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-
-  const handleLocalFormSubmit = (e?: React.FormEvent) => {
-    e?.preventDefault();
-
-    if (localFormData.name && localFormData.email && localFormData.message) {
-      // EmailJS implementation would go here
-      alert('Mesajınız gönderildi!');
-      setLocalFormData({ name: '', email: '', message: '' });
-    } else {
-      alert('Lütfen tüm alanları doldurun.');
-    }
-  };
-
-  return (
-    <div className="space-y-8">
-      <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-8 border border-green-400/20">
-        <h2 className="text-3xl font-bold text-white mb-6">Get In Touch</h2>
-        <p className="text-gray-300 mb-6">
-          I'm always open to discussing project opportunities, collaborations, or just having a conversation about technology.
-        </p>
-
-        <div className="space-y-6">
-          <div>
-            <label className="block text-white mb-2">Name</label>
-            <input
-              type="text"
-              value={localFormData.name}
-              onChange={(e) => setLocalFormData({ ...localFormData, name: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-green-400 focus:outline-none transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-white mb-2">Email</label>
-            <input
-              type="email"
-              value={localFormData.email}
-              onChange={(e) => setLocalFormData({ ...localFormData, email: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-green-400 focus:outline-none transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-white mb-2">Message</label>
-            <textarea
-              rows={5}
-              value={localFormData.message}
-              onChange={(e) => setLocalFormData({ ...localFormData, message: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-green-400 focus:outline-none transition-colors resize-none"
-            ></textarea>
-          </div>
-          <button
-            onClick={handleLocalFormSubmit}
-            className="flex items-center space-x-2 bg-green-400 text-black px-6 py-3 rounded-lg hover:bg-green-500 transition-colors"
-          >
-            <Send className="w-5 h-5" />
-            <span>Send Message</span>
-          </button>
         </div>
-      </div>
+      ))}
     </div>
-  );
-};
+  </div>
+);
+
+
+const ContactSection = () => (
+  <div className="space-y-8">
+    <div className="bg-gradient-to-r from-gray-900 to-black rounded-xl p-8 border border-green-400/20 max-w-xl mx-auto">
+      <h2 className="text-3xl font-bold text-white mb-2">Get in touch</h2>
+      <p className="text-gray-300 mb-6">
+        I'm always open to discussing project opportunities, collaborations, or just having a conversation about technology!
+      </p>
+      <form onSubmit={handleFormSubmit} className="space-y-6">
+        <div>
+          <label htmlFor="name" className="block text-gray-300 mb-1">Name</label>
+          <input
+            id="name"
+            type="text"
+            value={formData.name}
+            onChange={e => setFormData({ ...formData, name: e.target.value })}
+            className="w-full rounded-md border border-green-400 bg-gray-900 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className="block text-gray-300 mb-1">Email</label>
+          <input
+            id="email"
+            type="email"
+            value={formData.email}
+            onChange={e => setFormData({ ...formData, email: e.target.value })}
+            className="w-full rounded-md border border-green-400 bg-gray-900 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="message" className="block text-gray-300 mb-1">Message</label>
+          <textarea
+            id="message"
+            value={formData.message}
+            onChange={e => setFormData({ ...formData, message: e.target.value })}
+            className="w-full rounded-md border border-green-400 bg-gray-900 text-white px-4 py-2 h-32 resize-y focus:outline-none focus:ring-2 focus:ring-green-400"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-green-400 text-black px-6 py-3 rounded-md hover:bg-green-500 transition-colors"
+        >
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+);
+
 
   const sections: Record<SectionKey, () => JSX.Element> = {
-  about: () => <AboutSection />,
-  resume: () => <ResumeSection />,
-  portfolio: () => <PortfolioSection />,
-  contact: () => <ContactSection />
-};
+    about: AboutSection,
+    resume: ResumeSection,
+    portfolio: PortfolioSection,
+    contact: ContactSection
+  };
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative">
+      <button
+        className="fixed top-5 left-5 z-50 md:hidden bg-green-400 text-black rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        aria-label="Toggle Menu"
+      >
+        {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
+      {/* Sidebar */}
       <Sidebar />
-      <main className={`ml-72 p-8 transition-all duration-1000 ease-out ${
-        showContent ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-      }`}>
-        <div className="max-w-4xl">
-          <div className={`transition-all duration-500 ease-out ${
-            sectionTransition 
-              ? 'translate-y-8 opacity-0' 
-              : showContent 
-                ? 'translate-y-0 opacity-100' 
-                : 'translate-y-8 opacity-0'
-          }`}>
+       {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main Content */}
+       <main
+        className={`transition-all duration-1000 ease-out
+          ml-72 p-8
+          ${showContent ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+          md:ml-72 md:p-8
+          sm:ml-0 sm:p-4
+        `}
+      >
+        <div className="max-w-4xl mx-auto">
+          <div
+            className={`transition-all duration-500 ease-out
+              ${sectionTransition ? 'translate-y-8 opacity-0' : showContent ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}
+            `}
+          >
             {sections[activeSection]()}
           </div>
         </div>
       </main>
-      
+
+      {/* Responsive styles only for mobile */}
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes fadeInUp {
-          0% {
-            transform: translateY(30px);
-            opacity: 0;
+        @media (max-width: 768px) {
+          /* Sidebar mobilde gizli, toggle ile açılır */
+          .fixed.left-0.top-0.h-screen.w-72 {
+            position: fixed !important;
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
           }
-          100% {
-            transform: translateY(0);
-            opacity: 1;
+          .fixed.left-0.top-0.h-screen.w-72.translate-x-0 {
+            transform: translateX(0) !important;
+          }
+
+          main {
+            margin-left: 0 !important;
+            padding: 1rem !important;
+          }
+
+          nav button {
+            font-size: 1.25rem !important;
+            padding: 1rem !important;
+          }
+
+          .grid-cols-5 {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+          .md\\:grid-cols-2 {
+            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+          }
+
+          img {
+            width: 100% !important;
+            height: auto !important;
           }
         }
-        
-        @keyframes glowPulse {
-          0%, 100% {
-            text-shadow: 0 0 10px #10b981, 0 0 20px #10b981, 0 0 40px #10b981;
-          }
-          50% {
-            text-shadow: 0 0 20px #10b981, 0 0 30px #10b981, 0 0 60px #10b981;
-          }
-        }
-      ` }} />
+      `}} />
     </div>
   );
 };
