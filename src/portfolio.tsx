@@ -148,30 +148,38 @@ const education = [
   }
 ];
 
-const handleFormSubmit = (e?: React.FormEvent) => {
+const handleFormSubmit = async (e?: React.FormEvent) => {
   e?.preventDefault();
 
   if (formData.name && formData.email && formData.message) {
-    emailjs.send(
-      'service_xjqy2nh',
-      'template_zuz3nfr',
-      {
-        name: formData.name,
-        email: formData.email,
-        message: formData.message
-      },
-      'lI1dGtCF7a3bBTIMQ'
-    ).then(() => {
-      alert('Mesajınız gönderildi!');
-      setFormData({ name: '', email: '', message: '' });
-    }).catch((err: any) => {
-      console.error('EmailJS Error:', err);
+    try {
+      const res = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+
+      if (res.ok) {
+        alert('Mesajınız gönderildi!');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        alert('Mesaj gönderilemedi, lütfen tekrar deneyin.');
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
       alert('Mesaj gönderilemedi, lütfen tekrar deneyin.');
-    });
+    }
   } else {
     alert('Lütfen tüm alanları doldurun.');
   }
 };
+
 
  const LoadingScreen = () => {
   // CSS animasyonu için inline style
