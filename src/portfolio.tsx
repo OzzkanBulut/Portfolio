@@ -153,7 +153,7 @@ const handleFormSubmit = async (e?: React.FormEvent) => {
 
   if (formData.name && formData.email && formData.message) {
     try {
-      const res = await fetch('/api/sendEmail', {
+      const res = await fetch('https://ozkanbulut-api.vercel.app/api/sendEmail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
