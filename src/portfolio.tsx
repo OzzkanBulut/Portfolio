@@ -231,11 +231,17 @@ const handleFormSubmit = async (e?: React.FormEvent) => {
     <div>
       {/* Profil */}
       <div className="text-center mb-8">
-        <div className="w-28 h-28 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-400 to-green-600 p-1">
-          <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
-            <User className="w-14 h-14 text-green-400" />
-          </div>
-        </div>
+<div className="w-28 h-28 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-400 to-green-600 p-1">
+  <div className="w-full h-full rounded-full overflow-hidden">
+    <img
+      src="sadf.jpg"
+      alt="Özkan Bulut"
+      className="w-full h-[115%] object-cover object-center rounded-full scale-110 transition-transform duration-300 ease-in-out hover:scale-150 "
+    />
+  </div>
+
+</div>
+
         <h1 className="text-2xl font-bold text-white mb-1">Özkan Bulut</h1>
         <p className="text-green-400 font-mono text-sm">Java Developer</p>
       </div>
