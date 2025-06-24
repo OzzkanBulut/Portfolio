@@ -1,4 +1,3 @@
-// ContactSection.tsx
 import React, { useRef, useState, type FormEvent } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import emailjs from '@emailjs/browser';
@@ -10,29 +9,25 @@ const RECAPTCHA_SITE_KEY = '6Lcsc2wrAAAAAIX6twmweELe7I8S2wWukm1fq6xH';
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const recaptchaRef = useRef<InstanceType<typeof ReCAPTCHA>>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const recaptchaRef = useRef<InstanceType<typeof ReCAPTCHA>>(null);
+
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
 
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!recaptchaRef.current) {
-      alert('reCAPTCHA yüklenmedi, lütfen sayfayı yenileyin.');
+    if (!recaptchaToken) {
+      alert('Lütfen reCAPTCHA doğrulamasını tamamlayın.');
       return;
     }
 
     setLoading(true);
 
     try {
-      const token = await recaptchaRef.current.executeAsync();
-      recaptchaRef.current.reset();
-
-      if (!token) {
-        alert('Lütfen reCAPTCHA doğrulamasını tamamlayın.');
-        setLoading(false);
-        return;
-      }
-
       await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -40,13 +35,15 @@ const ContactSection = () => {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          'g-recaptcha-response': token,
+          'g-recaptcha-response': recaptchaToken,
         },
         EMAILJS_PUBLIC_KEY
       );
 
       alert('Mesajınız başarıyla gönderildi!');
       setFormData({ name: '', email: '', message: '' });
+      setRecaptchaToken(null);
+      if (recaptchaRef.current) recaptchaRef.current.reset();
     } catch (error) {
       console.error('EmailJS gönderim hatası:', error);
       alert('Mesaj gönderilemedi, lütfen tekrar deneyin.');
@@ -100,8 +97,10 @@ const ContactSection = () => {
           </div>
           <button
             type="submit"
-            disabled={loading}
-            className={`bg-green-400 text-black px-6 py-3 rounded-md hover:bg-green-500 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading || !recaptchaToken}
+            className={`bg-green-400 text-black px-6 py-3 rounded-md hover:bg-green-500 transition-colors ${
+              loading || !recaptchaToken ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             {loading ? 'Sending...' : 'Send Message'}
           </button>
@@ -109,6 +108,7 @@ const ContactSection = () => {
             sitekey={RECAPTCHA_SITE_KEY}
             size="normal"
             ref={recaptchaRef}
+            onChange={handleRecaptchaChange}
           />
         </form>
       </div>
