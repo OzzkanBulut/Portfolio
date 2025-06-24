@@ -6,7 +6,7 @@ import emailjs from '@emailjs/browser';
 const EMAILJS_SERVICE_ID = 'service_xjqy2nh';
 const EMAILJS_TEMPLATE_ID = 'template_zuz3nfr';
 const EMAILJS_PUBLIC_KEY = 'lI1dGtCF7a3bBTIMQ';
-const RECAPTCHA_SITE_KEY = '6LfOcGwrAAAAAMwXlb6EiZpTn5fMgw1oiQJ8T3QB';
+const RECAPTCHA_SITE_KEY = '6Lcsc2wrAAAAAIX6twmweELe7I8S2wWukm1fq6xH';
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
